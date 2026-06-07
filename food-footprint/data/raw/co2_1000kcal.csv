@@ -1,4 +1,4 @@
-Entity,Year,Greenhouse gas emissions per 1000kcal
+Entity,Year,ghg_per_1000kcal
 Apples,2010,0.8958333
 Bananas,2010,1.4333333
 Barley,2010,0.236
@@ -8,11 +8,9 @@ Beet Sugar,2010,0.5156695
 Berries & Grapes,2010,2.6842105
 Brassicas,2010,3
 Cane Sugar,2010,0.91168094
-Cassava,2010,1.3552362
 Cheese,2010,6.1705427
 Citrus Fruit,2010,1.21875
 Coffee,2010,50.94643
-Dark Chocolate,2010,9.023211
 Eggs,2010,3.2430556
 Fish (farmed),2010,7.6145253
 Groundnuts,2010,0.55689657
@@ -21,19 +19,13 @@ Maize,2010,0.37589827
 Milk,2010,5.25
 Nuts,2010,0.0699187
 Oatmeal,2010,0.94548225
-Olive Oil,2010,0.61312217
 Onions & Leeks,2010,1.3513514
-Other Pulses,2010,0.52492666
-Palm Oil,2010,0.8280543
-Peas,2010,0.28323698
 Pig Meat,2010,5.1506276
 Potatoes,2010,0.6284153
 Poultry Meat,2010,5.335135
 Prawns (farmed),2010,26.08738
-Rapeseed Oil,2010,0.42647058
 Rice,2010,1.2072707
 Root Vegetables,2010,1.1621622
-Sunflower Oil,2010,0.40723982
 Tofu,2010,1.1660516
 Tomatoes,2010,11
 Wheat & Rye,2010,0.5868435

@@ -1,4 +1,4 @@
-Entity,Year,Freshwater withdrawals per 1000kcal
+Entity,Year,water_per_1000kcal
 Apples,2010,375.20834
 Bananas,2010,190.83333
 Barley,2010,3.42
@@ -11,7 +11,6 @@ Cane Sugar,2010,176.66667
 Cheese,2010,1448.3721
 Citrus Fruit,2010,258.4375
 Coffee,2010,46.25
-Dark Chocolate,2010,104.5648
 Eggs,2010,401.18054
 Fish (farmed),2010,2062.1787
 Groundnuts,2010,319.36206
@@ -20,17 +19,13 @@ Maize,2010,47.69486
 Milk,2010,1047
 Nuts,2010,672.1626
 Oatmeal,2010,183.91154
-Olive Oil,2010,242.28506
 Onions & Leeks,2010,38.648647
-Palm Oil,2010,0.7239819
 Pig Meat,2010,751.38074
 Potatoes,2010,80.7377
 Poultry Meat,2010,356.75674
 Prawns (farmed),2010,3413.0098
-Rapeseed Oil,2010,26.889141
 Rice,2010,609.9837
 Root Vegetables,2010,76.75676
-Sunflower Oil,2010,114.01584
 Tofu,2010,54.83395
 Tomatoes,2010,1946.3158
 Wheat & Rye,2010,242.02621
