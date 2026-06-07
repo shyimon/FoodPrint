@@ -1,0 +1,52 @@
+{
+  "presets": [
+    {
+      "id": "mediterranean",
+      "label": "Mediterranean",
+      "description": "A balanced diet rich in vegetables, fish and olive oil",
+      "categories": {
+        "Red Meat":        50,
+        "White Meat":      150,
+        "Fish & Seafood":  200,
+        "Dairy & Eggs":    400,
+        "Vegetables":      900,
+        "Fruit":           700,
+        "Grains & Legumes":700,
+        "Nuts & Seeds":    100,
+        "Oils":            100,
+        "Plant-based":     50,
+        "Tofu":            0
+      }
+    },
+    {
+      "id": "vegan",
+      "label": "Vegan",
+      "description": "...",
+      "categories": { }
+    },
+    {
+      "id": "eat-lancet",
+      "label": "EAT-Lancet Planetary Health",
+      "description": "...",
+      "categories": { }
+    }
+  ],
+  "custom": {
+    "id": "custom",
+    "label": "Custom",
+    "description": "Your own diet",
+    "categories": {
+      "Red Meat":        0,
+      "White Meat":      0,
+      "Fish & Seafood":  0,
+      "Dairy & Eggs":    0,
+      "Vegetables":      0,
+      "Fruit":           0,
+      "Grains & Legumes":0,
+      "Nuts & Seeds":    0,
+      "Oils":            0,
+      "Plant-based":     0,
+      "Tofu":            0
+    }
+  }
+}

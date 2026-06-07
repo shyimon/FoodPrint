@@ -1,11 +1,41 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Food Footprint</title>
-  </head>
-  <body>
     <script type="module" src="/src/main.js"></script>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>food-footprint</title>
+  </head>
+  <body class="h-screen flex flex-col bg-gray-950 text-white overflow-hidden">
+
+    <!-- TOP BAR -->
+    <header id="top-bar" class="flex items-center gap-4 p-4 border-b border-gray-800">
+      <!-- food cards will be injected here by ui.js -->
+      <button id="add-food-btn" class="flex items-center gap-2 px-4 py-2 border border-gray-600 rounded-lg text-gray-400 hover:text-white hover:border-white transition">
+        + Add Food
+      </button>
+    </header>
+
+    <!-- DASHBOARD -->
+    <main class="flex-1 grid grid-cols-4 divide-x divide-gray-800 min-h-0">
+
+      <div id="panel-land" class="p-4">
+      </div>
+
+      <div id="panel-ghg" class="p-4">
+      </div>
+
+      <div id="panel-water" class="p-4">
+      </div>
+
+      <div id="panel-deaths" class="p-4">
+      </div>
+
+    </main>
+
+    <div id="tooltip-ghg" class="absolute hidden bg-gray-800 text-white text-sm rounded-lg p-3 max-w-xs pointer-events-none shadow-lg border border-gray-600">
+    </div>
+
   </body>
 </html>
