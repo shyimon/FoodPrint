@@ -1,6 +1,6 @@
 import './style.css'
 import { drawBarChart } from './charts/bar_chart.js'
-import { initState, computeTotals } from './ui.js'
+import { initState, computeTotals, renderTopBar } from './ui.js'
 
 const response_avg = await fetch('/categories_avg.json')
 const response_worst = await fetch('/categories_worst.json')
@@ -13,8 +13,13 @@ const data_presets = await presets.json()
 const startingPreset = data_presets.presets.find(p => p.id === 'mediterranean')
 const state = initState(data_avg, startingPreset)
 
-console.log(state)
 
 requestAnimationFrame(() => {
     drawBarChart(computeTotals(state), 'panel-ghg')
+    renderTopBar(state, onStateChange)
 })
+
+function onStateChange() {
+    drawBarChart(computeTotals(state), 'panel-ghg')
+    renderTopBar(state, onStateChange)
+}

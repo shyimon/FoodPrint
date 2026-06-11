@@ -1,0 +1,1 @@
+export const EAT_LANCET_GHG_GOAL = 9.6
