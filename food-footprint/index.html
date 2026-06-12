@@ -15,6 +15,17 @@
       <button id="add-food-btn" class="flex items-center gap-2 px-4 py-2 border fill border-gray-600 rounded-lg text-gray-400 hover:text-white hover:border-white transition">
         + Add Food
       </button>
+      <div>
+        <select id="preset-selector" class="bg-gray-900 border border-gray-600 rounded-lg px-1 py-2 text-gray-400 hover:border-white transition focus:outline-none cursor-pointer">
+        </select>
+        <div class="flex flex-col items-center gap-1 pt-2">
+        <label class="relative inline-flex items-center cursor-pointer">
+          <input type="checkbox" id="data-mode-toggle" class="sr-only peer">
+          <div class="w-12 h-6 bg-gray-700 rounded-full peer peer-checked:bg-red-800 peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+        </label>
+        <span class="text-xs text-gray-400" id="data-mode-label">Average</span>
+      </div>
+    </div>
     </header>
 
     <!-- DASHBOARD -->

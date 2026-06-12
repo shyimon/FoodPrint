@@ -20,6 +20,7 @@ export function drawBarChart(data, containerId) {
   const g = svg.append('g')
     .attr('transform', `translate(${margin.left}, ${margin.top})`)
 
+  data.sort((a, b) => b.ghg - a.ghg)
   const keys = data.map(d => d.category)
   const stackData = [Object.fromEntries(data.map(d => [d.category, d.ghg]))]
 
@@ -116,7 +117,7 @@ export function drawBarChart(data, containerId) {
     .attr('stroke-dasharray', '6,3')
 
 const tooltipTrigger = svg.append('g')
-  .attr('transform', `translate(${margin.left - 38}, ${margin.top + 195})`)
+  .attr('transform', `translate(${margin.left - 39}, ${margin.top + 190})`)
   .style('cursor', 'pointer')
 
 tooltipTrigger.append('circle')
@@ -254,7 +255,7 @@ tooltipTrigger
     })
     .on('mousemove', (event) => {
         tooltip.style.left = (event.pageX + 12) + 'px'
-        tooltip.style.top  = (event.pageY - 28) + 'px'
+        tooltip.style.top  = (event.pageY - 24) + 'px'
     })
     .on('mouseout', (event) => {
         d3.select(event.currentTarget)

@@ -37,15 +37,32 @@ export function renderTopBar(state, onStateChange) {
       const card = document.createElement('div')
 
         const proportion = d.grams_per_week / totalGrams
+        const labelVisible = proportion >= 0.1 // show label only if element is big enough, avoids cluttering
 
-        const widthPercent = Math.max(proportion * 100, 10)
+        const widthPercent = Math.max(proportion * 100, 1)
         card.style.width = `${widthPercent}%`
 
-      card.className = 'food-card flex flex-col px-4 py-2 border border-gray-600 rounded-lg cursor-pointer overflow-hidden hover:border-white transition'
-      card.innerHTML = `
-        <span class="text-sm font-bold self-center">${d.category}</span>
-        <span class="text-xs self-center text-gray-300">${d.grams_per_week}g / wk</span>
-      `
+      card.className = 'food-card flex flex-col px-4 py-2 border border-gray-600 rounded-lg h-16 justify-center cursor-pointer overflow-hidden hover:border-white transition'
+      card.innerHTML = labelVisible ? `
+        <span class="text-sm font-medium">${d.category}</span>
+        <span class="text-xs text-gray-400">${d.grams_per_week}g / wk</span>
+      ` : ''
+
+      if (!labelVisible) {
+        const tooltip = document.getElementById('tooltip-ghg')
+        card.addEventListener('mouseover', (event) => {
+          tooltip.innerHTML = `<strong>${d.category}</strong><br>${d.grams_per_week}g / wk`
+          tooltip.classList.remove('hidden')
+        })
+        card.addEventListener('mousemove', (event) => {
+          tooltip.style.left = (event.pageX + 12) + 'px'
+          tooltip.style.top = (event.pageY - 26) + 'px'
+        })
+        card.addEventListener('mouseout', () => {
+          tooltip.classList.add('hidden')
+        })
+      }
+
       card.style.backgroundColor = categoryColors[d.category] + '77'
       card.style.borderColor = categoryColors[d.category]
       card.addEventListener('click', () => openEditModal(d, state, onStateChange))
@@ -136,4 +153,22 @@ function openAddModal(state, onStateChange) {
   })
 
   document.body.appendChild(overlay)
+}
+
+export function renderPresetSelector(presets, state, onStateChange) {
+  const selector = document.getElementById('preset-selector')
+  
+  // Populate options
+  selector.innerHTML = presets.map(p => 
+    `<option value="${p.id}">${p.label}</option>`
+  ).join('')
+
+  // On change, update state grams from the selected preset
+  selector.addEventListener('change', () => {
+    const selected = presets.find(p => p.id === selector.value)
+    state.forEach(d => {
+      d.grams_per_week = selected.categories[d.category] ?? 0
+    })
+    onStateChange()
+  })
 }

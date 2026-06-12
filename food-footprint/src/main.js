@@ -1,6 +1,6 @@
 import './style.css'
 import { drawBarChart } from './charts/bar_chart.js'
-import { initState, computeTotals, renderTopBar } from './ui.js'
+import { initState, computeTotals, renderTopBar, renderPresetSelector } from './ui.js'
 
 const response_avg = await fetch('/categories_avg.json')
 const response_worst = await fetch('/categories_worst.json')
@@ -13,10 +13,29 @@ const data_presets = await presets.json()
 const startingPreset = data_presets.presets.find(p => p.id === 'mediterranean')
 const state = initState(data_avg, startingPreset)
 
+const toggle = document.getElementById('data-mode-toggle')
+const modeLabel = document.getElementById('data-mode-label')
+
+toggle.addEventListener('change', () => {
+    const isWorst = toggle.checked
+    modeLabel.textContent = isWorst ? 'Worst Case' : 'Average'
+
+    const newData = isWorst ? data_worst : data_avg
+      state.forEach(d => {
+    const match = newData.find(n => n.category === d.category)
+    if (match) {
+      d.ghg_per_kg = match.ghg_per_kg
+      d.land_per_kg = match.land_per_kg
+      d.water_per_kg = match.water_per_kg
+    }
+  })
+  onStateChange()
+})
 
 requestAnimationFrame(() => {
     drawBarChart(computeTotals(state), 'panel-ghg')
     renderTopBar(state, onStateChange)
+    renderPresetSelector(data_presets.presets, state, onStateChange)
 })
 
 function onStateChange() {
