@@ -1,25 +1,29 @@
 export const categoryColors = {
-  "Red Meat":        "#ef4444", // red
-  "White Meat":      "#f97316", // orange
-  "Fish and Seafood":  "#38bdf8", // light blue
-  "Dairy and Eggs":    "#facc15", // yellow
-  "Vegetables":      "#4ade80", // green
-  "Fruit":           "#f472b6", // pink
-  "Grains":"#d97706", // amber
-  "Legumes":    "#a78bfa", // purple
-  "Nuts and Seeds":            "#94a3b8", // slate
-  "Tofu":     "#2dd4bf", // teal
+  "Beef & Lamb":        "#ef4444",
+  "Pork":               "#f97316",
+  "Poultry":            "#fb923c",
+  "Eggs":               "#facc15",
+  "Dairy":              "#fde68a",
+  "Fish & Seafood":     "#38bdf8",
+  "Vegetables":         "#4ade80",
+  "Fruits":             "#f472b6",
+  "Legumes":            "#a3e635",
+  "Nuts":               "#a78bfa",
+  "Whole Grains":       "#d97706",
+  "Starchy Vegetables": "#78716c"
 }
 
 export const categoryColorsHover = {
-    "Red Meat":        "#ff6666", 
-    "White Meat":      "#fb9538", 
-    "Fish and Seafood":  "#5adffa", 
-    "Dairy and Eggs":    "#fcee37", 
-    "Vegetables":      "#6cffa2", 
-    "Fruit":           "#f694d8", 
-    "Grains":"#fb9928", 
-    "Legumes":    "#c9adff", 
-    "Nuts and Seeds":            "#b6c5da", 
-    "Tofu":     "#4fffdf", 
+  "Beef & Lamb":        "#a22e2e",
+  "Pork":               "#b95710",
+  "Poultry":            "#fb923c",
+  "Eggs":               "#c6a210",
+  "Dairy":              "#bcac6b",
+  "Fish & Seafood":     "#2b94c2",
+  "Vegetables":         "#3db96b",
+  "Fruits":             "#b45385",
+  "Legumes":            "#80b728",
+  "Nuts":               "#7f6ac0",
+  "Whole Grains":       "#a45a05",
+  "Starchy Vegetables": "#4e4946"
 }

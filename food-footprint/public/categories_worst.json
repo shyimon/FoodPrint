@@ -2,71 +2,85 @@
   {
     "category": "Red Meat",
     "land_per_kg": 369.81,
-    "water_per_kg": 1802.8,
+    "water_per_kg": 2714.3,
     "ghg_per_kg": 99.48,
     "grams_per_week": 0
   },
   {
-    "category": "White Meat",
+    "category": "Pork",
+    "land_per_kg": 17.36,
+    "water_per_kg": 1795.8,
+    "ghg_per_kg": 12.31,
+    "grams_per_week": 0
+  },
+  {
+    "category": "Poultry",
     "land_per_kg": 12.22,
     "water_per_kg": 660.0,
     "ghg_per_kg": 9.87,
     "grams_per_week": 0
   },
   {
-    "category": "Fish and Seafood",
+    "category": "Eggs",
+    "land_per_kg": 6.27,
+    "water_per_kg": 577.7,
+    "ghg_per_kg": 4.67,
+    "grams_per_week": 0
+  },
+  {
+    "category": "Dairy",
+    "land_per_kg": 87.79,
+    "water_per_kg": 5605.2,
+    "ghg_per_kg": 23.88,
+    "grams_per_week": 0
+  },
+  {
+    "category": "Fish & Seafood",
     "land_per_kg": 8.41,
     "water_per_kg": 3691.3,
     "ghg_per_kg": 26.87,
     "grams_per_week": 0
   },
   {
-    "category": "Dairy and Eggs",
-    "land_per_kg": 87.79,
-    "water_per_kg": 5605.2,
-    "ghg_per_kg": 33.3,
-    "grams_per_week": 0
-  },
-  {
     "category": "Vegetables",
-    "land_per_kg": 2.04,
-    "water_per_kg": 620.1,
-    "ghg_per_kg": 3.2,
+    "land_per_kg": 0.8,
+    "water_per_kg": 369.8,
+    "ghg_per_kg": 2.09,
     "grams_per_week": 0
   },
   {
-    "category": "Fruit",
+    "category": "Fruits",
     "land_per_kg": 2.41,
     "water_per_kg": 419.6,
     "ghg_per_kg": 1.53,
     "grams_per_week": 0
   },
   {
-    "category": "Grains",
+    "category": "Legumes",
+    "land_per_kg": 15.57,
+    "water_per_kg": 435.7,
+    "ghg_per_kg": 3.16,
+    "grams_per_week": 0
+  },
+  {
+    "category": "Nuts",
+    "land_per_kg": 12.96,
+    "water_per_kg": 4133.8,
+    "ghg_per_kg": 3.23,
+    "grams_per_week": 0
+  },
+  {
+    "category": "Whole Grains",
     "land_per_kg": 7.6,
     "water_per_kg": 2248.4,
     "ghg_per_kg": 4.45,
     "grams_per_week": 0
   },
   {
-    "category": "Legumes",
-    "land_per_kg": 15.57,
-    "water_per_kg": 435.7,
-    "ghg_per_kg": 1.79,
-    "grams_per_week": 0
-  },
-  {
-    "category": "Nuts and Seeds",
-    "land_per_kg": 21.62,
-    "water_per_kg": 4133.8,
-    "ghg_per_kg": 28.53,
-    "grams_per_week": 0
-  },
-  {
-    "category": "Tofu",
-    "land_per_kg": 3.52,
-    "water_per_kg": 148.6,
-    "ghg_per_kg": 3.16,
+    "category": "Starchy Vegetables",
+    "land_per_kg": 0.88,
+    "water_per_kg": 59.1,
+    "ghg_per_kg": 0.46,
     "grams_per_week": 0
   }
 ]

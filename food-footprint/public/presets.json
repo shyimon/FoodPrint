@@ -4,53 +4,72 @@
       "id": "mediterranean",
       "label": "Mediterranean",
       "categories": {
-        "Red Meat":        50,
-        "White Meat":      150,
-        "Fish and Seafood":  200,
-        "Dairy and Eggs":    400,
-        "Vegetables":      900,
-        "Fruit":           700,
-        "Grains":700,
-        "Legumes":    100,
-        "Nuts and Seeds":            100,
-        "Tofu":            0
+        "Red Meat": 0,
+        "Pork": 0,
+        "Poultry": 0,
+        "Eggs": 0,
+        "Dairy": 0,
+        "Fish & Seafood": 0,
+        "Vegetables": 0,
+        "Fruits": 0,
+        "Legumes": 0,
+        "Nuts": 0,
+        "Whole Grains": 0,
+        "Starchy Vegetables": 0
       }
     },
     {
       "id": "vegan",
       "label": "Vegan",
-      "categories": { }
+      "categories": {
+        "Red Meat": 0,
+        "Pork": 0,
+        "Poultry": 0,
+        "Eggs": 0,
+        "Dairy": 0,
+        "Fish & Seafood": 0,
+        "Vegetables": 0,
+        "Fruits": 0,
+        "Legumes": 0,
+        "Nuts": 0,
+        "Whole Grains": 0,
+        "Starchy Vegetables": 0
+      }
     },
     {
       "id": "eat-lancet",
       "label": "EAT-Lancet",
       "categories": {
-        "Red Meat":         20,
-        "White Meat":       100,
-        "Fish and Seafood":   150,
-        "Dairy and Eggs":     50,
-        "Vegetables":       2000,
-        "Fruit":            1000,
-        "Grains": 1000,
-        "Legumes":     200,
-        "Nuts and Seeds":             50,
-        "Tofu":             200
+        "Red Meat": 0,
+        "Pork": 0,
+        "Poultry": 0,
+        "Eggs": 0,
+        "Dairy": 0,
+        "Fish & Seafood": 0,
+        "Vegetables": 0,
+        "Fruits": 0,
+        "Legumes": 0,
+        "Nuts": 0,
+        "Whole Grains": 0,
+        "Starchy Vegetables": 0
       }
     },
     {
       "id": "custom",
       "label": "Custom Diet",
       "categories": {
-        "Red Meat":        0,
-        "White Meat":      0,
-        "Fish and Seafood":  0,
-        "Dairy and Eggs":    0,
-        "Vegetables":      0,
-        "Fruit":           0,
-        "Grains":0,
-        "Legumes":    0,
-        "Nuts and Seeds":            0,
-        "Tofu":            0
+        "Red Meat": 0,
+        "Pork": 0,
+        "Poultry": 0,
+        "Eggs": 0,
+        "Dairy": 0,
+        "Fish & Seafood": 0,
+        "Vegetables": 0,
+        "Fruits": 0,
+        "Legumes": 0,
+        "Nuts": 0,
+        "Whole Grains": 0,
+        "Starchy Vegetables": 0
       }
     }
   ]

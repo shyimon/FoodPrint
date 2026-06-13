@@ -10,16 +10,18 @@ df = land[["Entity", "land_per_kg"]] \
     .merge(ghg[["Entity", "ghg_per_kg"]], on="Entity", how="outer")
 
 categories = {
-    "Red Meat": ["Beef (beef herd)", "Lamb & Mutton", "Pig Meat"],
-    "White Meat": ["Poultry Meat"],
-    "Fish and Seafood": ["Prawns (farmed)", "Fish (farmed)"],
-    "Dairy and Eggs": ["Beef (dairy herd)", "Cheese", "Eggs", "Milk"],
-    "Vegetables": ["Brassicas", "Onions & Leeks", "Potatoes", "Root Vegetables", "Tomatoes", "Beet Sugar", "Cane Sugar"],
-    "Fruit": ["Apples", "Bananas", "Berries & Grapes", "Citrus Fruit"],
-    "Grains": ["Barley", "Maize", "Oatmeal", "Rice", "Wheat & Rye"],
-    "Legumes": ["Peas", "Other Pulses"],
-    "Nuts and seeds": ["Groundnuts", "Nuts", "Coffee"],
-    "Tofu": ["Tofu"]
+    "Red Meat": ["Beef (beef herd)", "Beef (dairy herd)", "Lamb & Mutton"],
+    "Pork": ["Pig Meat"],
+    "Poultry": ["Poultry Meat"],
+    "Eggs": ["Eggs"],
+    "Dairy": ["Milk", "Cheese"],
+    "Fish & Seafood": ["Fish (farmed)", "Prawns (farmed)"],
+    "Vegetables": ["Brassicas", "Tomatoes", "Onions & Leeks"],
+    "Fruits": ["Apples", "Bananas", "Berries & Grapes", "Citrus Fruit"],
+    "Legumes": ["Peas", "Other Pulses", "Tofu"],
+    "Nuts": ["Nuts", "Groundnuts"],
+    "Whole Grains": ["Barley", "Rice", "Wheat & Rye", "Oatmeal", "Maize"],
+    "Starchy Vegetables": ["Potatoes", "Root Vegetables"],
 }
 
 results = []
@@ -31,7 +33,7 @@ for category, entities in categories.items():
         "land_per_kg":  round(subset["land_per_kg"].mean(), 2),
         "water_per_kg": round(subset["water_per_kg"].mean(), 2),
         "ghg_per_kg":   round(subset["ghg_per_kg"].mean(), 2),
-        "grams_per_week": 0
+        "grams_per_day": 0
     })
 
 with open("food-footprint/public/categories_avg.json", "w+") as f:
@@ -47,7 +49,7 @@ for category, entities in categories.items():
         "land_per_kg": round(subset.loc[subset["land_per_kg"].idxmax()]["land_per_kg"], 2),
         "water_per_kg": round(subset.loc[subset["water_per_kg"].idxmax()]["water_per_kg"], 2),
         "ghg_per_kg": round(subset.loc[subset["ghg_per_kg"].idxmax()]["ghg_per_kg"], 2),
-        "grams_per_week": 0
+        "grams_per_day": 0
     })
 
 with open("food-footprint/public/categories_worst.json", "w+") as f:

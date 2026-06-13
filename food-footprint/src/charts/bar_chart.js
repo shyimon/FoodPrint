@@ -1,6 +1,6 @@
 import * as d3 from 'd3'
 import { categoryColors, categoryColorsHover } from '../colors'
-import { EAT_LANCET_GHG_GOAL } from '../constants'
+import { EAT_LANCET_GHG_GOAL } from '../constants' // espresso in milioni di tonnellate per giorno
 
 export function drawBarChart(data, containerId) {
   const container = document.getElementById(containerId)
@@ -20,7 +20,7 @@ export function drawBarChart(data, containerId) {
   const g = svg.append('g')
     .attr('transform', `translate(${margin.left}, ${margin.top})`)
 
-  data.sort((a, b) => b.ghg - a.ghg)
+  data.sort((a, b) => b.ghg - a.ghg) // il cibo con il maggior contributo è alla base dello stack
   const keys = data.map(d => d.category)
   const stackData = [Object.fromEntries(data.map(d => [d.category, d.ghg]))]
 
@@ -33,11 +33,11 @@ export function drawBarChart(data, containerId) {
     .domain([0, maxY])
     .range([innerHeight, 0])
 
-  // Bar width — single wide bar
-  const barWidth = innerWidth * 0.8
-  const barX = (innerWidth - barWidth) / 2
+  // barra verticale da poi dividere
+  const barWidth = innerWidth * 0.75
+  const barX = (innerWidth - barWidth) / 2 // per centrare la barra sul div
 
-  // Tooltip
+  // hover per mostrare informazioni aggiuntive
   const tooltip = document.getElementById('tooltip-ghg')
 
   // Draw segments
@@ -58,9 +58,9 @@ export function drawBarChart(data, containerId) {
         .attr('width', barWidth)
         .attr('height', segHeight)
         .attr('fill', categoryColors[category])
-        .on('mouseover', (event) => {
+        .on('mouseover', (event) => { // on hover mostra informazioni più dettagliate
           d3.select(event.currentTarget).attr('opacity', 0.8)
-          tooltip.innerHTML = `<strong>${category}</strong><br>${(segment[1] - segment[0]).toFixed(2)} kg CO₂eq / week`
+          tooltip.innerHTML = `<strong>${category}</strong><br>${(segment[1] - segment[0]).toFixed(2)} Tonnes of CO₂eq / day`
           tooltip.classList.remove('hidden')
         })
         .on('mousemove', (event) => {
@@ -72,7 +72,7 @@ export function drawBarChart(data, containerId) {
           tooltip.classList.add('hidden')
         })
 
-      // Label — only if segment is tall enough
+      // se la grandezza della barra lo permette, mostra il nome del cibo
       if (segHeight > 20) {
         d3.select(this).append('text')
           .attr('x', barX + barWidth / 2)
@@ -88,7 +88,7 @@ export function drawBarChart(data, containerId) {
 
   // Y axis
   g.append('g')
-    .call(d3.axisLeft(y).ticks(5))
+    .call(d3.axisLeft(y).ticks(5).tickFormat(d => d === 0 ? '0' : `${d}M`))
     .call(g => g.select('.domain').remove())
     .call(g => g.selectAll('.tick line')
       .attr('x2', innerWidth)
@@ -104,9 +104,9 @@ export function drawBarChart(data, containerId) {
     .attr('text-anchor', 'middle')
     .attr('fill', '#9ca3af')
     .style('font-size', '11px')
-    .text('kg CO₂eq / week')
+    .text('Tonnes of CO₂eq / day')
 
-  // EAT-Lancet reference line
+  // linea rossa eat-lancet
   g.append('line')
     .attr('x1', 0)
     .attr('x2', innerWidth)
@@ -134,8 +134,8 @@ tooltipTrigger.append('text')
 
 tooltipTrigger
   .on('mouseover', () => {
-    tooltip.textContent = 'Greenhouse gas emissions are measured in kilograms of carbon dioxide-equivalents. This means non-CO₂ gases are weighted by theamount of warming they cause over a 100-year timescale.'
-    tooltip.textContent += 'The red line shows the emissions goal proposed by the EAT-Lancet Commission for 2050 in the Planetary Health Diet Report.'
+    tooltip.textContent = 'Greenhouse gas emissions are measured in Gigatonnes (one Gt is one billion tonnes) of carbon dioxide-equivalents. This means non-CO₂ gases are weighted by theamount of warming they cause over a 100-year timescale.'
+    tooltip.textContent += ' The red line shows the emissions goal proposed by the EAT-Lancet Commission for 2050 in the Planetary Health Diet Report.'
     tooltip.classList.remove('hidden')
   })
   .on('mousemove', (event) => {
@@ -145,121 +145,4 @@ tooltipTrigger
   .on('mouseout', () => {
     tooltip.classList.add('hidden')
   })
-}
-
-export function oldDrawBarChart(data, containerId) {
-  const container = document.getElementById(containerId)
-  const width = container.clientWidth
-  const height = container.clientHeight
-
-  const svg = d3.select(`#${containerId}`)
-    .append('svg')
-    .attr('width', width)
-    .attr('height', height)
-
-  const margin = { top: 20, right: 30, bottom: 100, left: 50 }
-  const innerWidth = width - margin.left - margin.right
-  const innerHeight = height - margin.top - margin.bottom
-
-  const g = svg.append('g')
-    .attr('transform', `translate(${margin.left}, ${margin.top})`)
-
-  // X scale — one band per category
-  const x = d3.scaleBand()
-    .domain(data.map(d => d.category))
-    .range([0, innerWidth])
-    .padding(0.3)
-
-  // Y scale — from 0 to max GHG value
-  const y = d3.scaleLinear()
-    .domain([0, d3.max(data, d => d.ghg)])
-    .range([innerHeight, 0])
-
-  // X axis
-  g.append('g')
-    .attr('transform', `translate(0, ${innerHeight})`)
-    .call(d3.axisBottom(x))
-    .selectAll('text')
-    .attr('transform', 'rotate(-45)')
-    .style('text-anchor', 'end')
-
-  // Y axis
-  g.append('g')
-    .call(d3.axisLeft(y))
-
-  // Bars
-  g.selectAll('rect')
-    .data(data)
-    .join('rect')
-    .attr('x', d => x(d.category))
-    .attr('y', d => y(d.ghg))
-    .attr('width', x.bandwidth())
-    .attr('height', d => innerHeight - y(d.ghg))
-    .attr('fill', '#4ade80')
-
-// additional info for ghg emissions
-const labelGroup = svg.append('g')
-    .attr('transform', `translate(15, ${margin.top + innerHeight / 2})`)
-
-labelGroup.append('text')
-    .attr('transform', 'rotate(-90)')
-    .attr('text-anchor', 'middle')
-    .attr('fill', '#9ca3af')
-    .style('font-size', '12px')
-    .text('GHG Emissions')
-
-const tooltipTrigger = svg.append('g')
-  .attr('transform', `translate(12, ${margin.top + innerHeight / 2 - 60})`)
-  .style('cursor', 'pointer')
-
-tooltipTrigger.append('circle')
-  .attr('r', 8)
-  .attr('fill', '#374151')
-  .attr('stroke', '#6b7280')
-
-tooltipTrigger.append('text')
-  .attr('text-anchor', 'middle')
-  .attr('dominant-baseline', 'central')
-  .attr('fill', '#9ca3af')
-  .style('font-size', '11px')
-  .text('?')
-
-const tooltip = document.getElementById('tooltip-ghg')
-
-tooltipTrigger
-  .on('mouseover', (event) => {
-    tooltip.textContent = 'Greenhouse gas emissions are measured in kilograms of carbon dioxide-equivalents. This means non-CO₂ gases are weighted by the amount of warming they cause over a 100-year timescale.'
-    tooltip.classList.remove('hidden')
-  })
-  .on('mousemove', (event) => {
-    tooltip.style.left = (event.pageX + 12) + 'px'
-    tooltip.style.top  = (event.pageY - 28) + 'px'
-  })
-  .on('mouseout', () => {
-    tooltip.classList.add('hidden')
-  })
-
-  g.selectAll('rect')
-    .data(data)
-    .join('rect')
-    .attr('x', d => x(d.category))
-    .attr('y', d => y(d.ghg))
-    .attr('width', x.bandwidth())
-    .attr('height', d => innerHeight - y(d.ghg))
-    .attr('fill', d => categoryColors[d.category])
-    .on('mouseover', (event, d) => {
-        d3.select(event.currentTarget)
-          .attr('fill', d => categoryColorsHover[d.category])
-        tooltip.innerHTML = `<strong>${d.category}</strong><br>${d.ghg.toFixed(2)} kg CO₂eq / week`
-        tooltip.classList.remove('hidden')
-    })
-    .on('mousemove', (event) => {
-        tooltip.style.left = (event.pageX + 12) + 'px'
-        tooltip.style.top  = (event.pageY - 24) + 'px'
-    })
-    .on('mouseout', (event) => {
-        d3.select(event.currentTarget)
-          .attr('fill', d => categoryColors[d.category])
-        tooltip.classList.add('hidden')
-    })
 }

@@ -1,4 +1,5 @@
 import { categoryColors } from "./colors"
+import { WORLD_POPULATION_2050 } from "./constants"
 
 export function initState(data_avg, preset) {
   return data_avg.map(d => ({
@@ -6,17 +7,17 @@ export function initState(data_avg, preset) {
     ghg_per_kg:   d.ghg_per_kg,
     land_per_kg:  d.land_per_kg,
     water_per_kg: d.water_per_kg,
-    grams_per_week: preset.categories[d.category] ?? 0
+    grams_per_day: preset.categories[d.category] ?? 0
   }))
 }
 
 export function computeTotals(state) {
   return state.map(d => ({
     category: d.category,
-    ghg:  d.ghg_per_kg  * (d.grams_per_week / 1000),
-    land: d.land_per_kg * (d.grams_per_week / 1000),
-    water: d.water_per_kg * (d.grams_per_week / 1000),
-    grams_per_week: d.grams_per_week
+    ghg:  (d.ghg_per_kg  * (d.grams_per_day / 1000)) * WORLD_POPULATION_2050, // converte a gigatonnellata per settimana, scalata su tutta la popolazione mondiale
+    land: d.land_per_kg * (d.grams_per_day / 1000),
+    water: d.water_per_kg * (d.grams_per_day / 1000),
+    grams_per_day: d.grams_per_day
   }))
 }
 
@@ -28,15 +29,15 @@ export function renderTopBar(state, onStateChange) {
 
   // One card per active category
   const totalGrams = state
-    .filter(d => d.grams_per_week > 0)
-    .reduce((sum, d) => sum + d.grams_per_week, 0)
+    .filter(d => d.grams_per_day > 0)
+    .reduce((sum, d) => sum + d.grams_per_day, 0)
 
   state
-    .filter(d => d.grams_per_week > 0)
+    .filter(d => d.grams_per_day > 0)
     .forEach(d => {
       const card = document.createElement('div')
 
-        const proportion = d.grams_per_week / totalGrams
+        const proportion = d.grams_per_day / totalGrams
         const labelVisible = proportion >= 0.1 // show label only if element is big enough, avoids cluttering
 
         const widthPercent = Math.max(proportion * 100, 1)
@@ -45,13 +46,13 @@ export function renderTopBar(state, onStateChange) {
       card.className = 'food-card flex flex-col px-4 py-2 border border-gray-600 rounded-lg h-16 justify-center cursor-pointer overflow-hidden hover:border-white transition'
       card.innerHTML = labelVisible ? `
         <span class="text-sm font-medium">${d.category}</span>
-        <span class="text-xs text-gray-400">${d.grams_per_week}g / wk</span>
+        <span class="text-xs text-gray-400">${d.grams_per_day}g / day</span>
       ` : ''
 
       if (!labelVisible) {
         const tooltip = document.getElementById('tooltip-ghg')
         card.addEventListener('mouseover', (event) => {
-          tooltip.innerHTML = `<strong>${d.category}</strong><br>${d.grams_per_week}g / wk`
+          tooltip.innerHTML = `<strong>${d.category}</strong><br>${d.grams_per_day}g / day`
           tooltip.classList.remove('hidden')
         })
         card.addEventListener('mousemove', (event) => {
@@ -81,12 +82,12 @@ function openEditModal(item, state, onStateChange) {
     <div class="bg-gray-900 border border-gray-700 rounded-xl p-6 flex flex-col gap-4 w-72" id="modal-box">
       <h2 class="text-lg font-semibold">${item.category}</h2>
       <div class="flex flex-col gap-1">
-        <label class="text-sm text-gray-400">Grams per week</label>
+        <label class="text-sm text-gray-400">Grams per day</label>
         <input 
           id="modal-input"
           type="number" 
           min="0"
-          value="${item.grams_per_week}"
+          value="${item.grams_per_day}"
           class="bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-white"
         />
       </div>
@@ -105,14 +106,14 @@ function openEditModal(item, state, onStateChange) {
   // Save button
   overlay.querySelector('#modal-save').addEventListener('click', () => {
     const newGrams = parseInt(overlay.querySelector('#modal-input').value)
-    item.grams_per_week = isNaN(newGrams) ? 0 : newGrams
+    item.grams_per_day = isNaN(newGrams) ? 0 : newGrams
     document.body.removeChild(overlay)
     onStateChange()
   })
 
   // Remove button
   overlay.querySelector('#modal-remove').addEventListener('click', () => {
-    item.grams_per_week = 0
+    item.grams_per_day = 0
     document.body.removeChild(overlay)
     onStateChange()
   })
@@ -121,7 +122,7 @@ function openEditModal(item, state, onStateChange) {
 }
 
 function openAddModal(state, onStateChange) {
-  const inactive = state.filter(d => d.grams_per_week === 0)
+  const inactive = state.filter(d => d.grams_per_day === 0)
 
   const overlay = document.createElement('div')
   overlay.className = 'fixed inset-0 bg-black/60 flex items-center justify-center z-50'
@@ -167,7 +168,7 @@ export function renderPresetSelector(presets, state, onStateChange) {
   selector.addEventListener('change', () => {
     const selected = presets.find(p => p.id === selector.value)
     state.forEach(d => {
-      d.grams_per_week = selected.categories[d.category] ?? 0
+      d.grams_per_day = selected.categories[d.category] ?? 0
     })
     onStateChange()
   })
