@@ -2,9 +2,9 @@ import * as d3 from 'd3'
 import { categoryColors, categoryColorsHover } from '../colors'
 import { EAT_LANCET_GHG_GOAL } from '../constants' // espresso in milioni di tonnellate per giorno
 
-export function drawBarChart(data, containerId) {
-  const container = document.getElementById(containerId)
-  d3.select(`#${containerId}`).selectAll('svg').remove() 
+export function drawBarChart(data) {
+  const container = document.getElementById('panel-ghg')
+  d3.select(`#${'panel-ghg'}`).selectAll('svg').remove() 
 
   const width = container.clientWidth
   const height = container.clientHeight
@@ -12,7 +12,7 @@ export function drawBarChart(data, containerId) {
   const innerWidth = width - margin.left - margin.right
   const innerHeight = height - margin.top - margin.bottom
 
-  const svg = d3.select(`#${containerId}`)
+  const svg = d3.select(`#${'panel-ghg'}`)
     .append('svg')
     .attr('width', width)
     .attr('height', height)
@@ -92,7 +92,7 @@ export function drawBarChart(data, containerId) {
     .call(g => g.select('.domain').remove())
     .call(g => g.selectAll('.tick line')
       .attr('x2', innerWidth)
-      .attr('stroke', '#374151')
+      .attr('stroke', '#57617199')
       .attr('stroke-dasharray', '4,2'))
     .call(g => g.selectAll('.tick text')
       .attr('fill', '#9ca3af')
@@ -117,7 +117,7 @@ export function drawBarChart(data, containerId) {
     .attr('stroke-dasharray', '6,3')
 
 const tooltipTrigger = svg.append('g')
-  .attr('transform', `translate(${margin.left - 39}, ${margin.top + 190})`)
+  .attr('transform', `translate(${margin.left - 40}, ${margin.top + 171})`)
   .style('cursor', 'pointer')
 
 tooltipTrigger.append('circle')
@@ -134,7 +134,7 @@ tooltipTrigger.append('text')
 
 tooltipTrigger
   .on('mouseover', () => {
-    tooltip.textContent = 'Greenhouse gas emissions are measured in Gigatonnes (one Gt is one billion tonnes) of carbon dioxide-equivalents. This means non-CO₂ gases are weighted by theamount of warming they cause over a 100-year timescale.'
+    tooltip.textContent = 'Greenhouse gas emissions are measured in millions of tonnes of carbon dioxide-equivalents emitted per day (this means non-CO₂ gases are weighted by theamount of warming they cause over a 100-year timescale), projected on 10 billion humans.'
     tooltip.textContent += ' The red line shows the emissions goal proposed by the EAT-Lancet Commission for 2050 in the Planetary Health Diet Report.'
     tooltip.classList.remove('hidden')
   })

@@ -1,6 +1,9 @@
 import './style.css'
 import { drawBarChart } from './charts/bar_chart.js'
+import { drawAnimalDeaths, startAnimation } from './charts/animal_deaths.js'
 import { initState, computeTotals, renderTopBar, renderPresetSelector } from './ui.js'
+import { drawWaterChart } from './charts/water_chart.js'
+import { EAT_LANCET_WATER_GOAL } from './constants.js'
 
 const response_avg = await fetch('/categories_avg.json')
 const response_worst = await fetch('/categories_worst.json')
@@ -33,12 +36,17 @@ toggle.addEventListener('change', () => {
 })
 
 requestAnimationFrame(() => {
-    drawBarChart(computeTotals(state), 'panel-ghg')
+    drawBarChart(computeTotals(state))
+    drawAnimalDeaths(computeTotals(state))
+    startAnimation()
     renderTopBar(state, onStateChange)
+    drawWaterChart(computeTotals(state))
     renderPresetSelector(data_presets.presets, state, onStateChange)
 })
 
 function onStateChange() {
-    drawBarChart(computeTotals(state), 'panel-ghg')
+    drawBarChart(computeTotals(state))
+    drawWaterChart(computeTotals(state))
+    drawAnimalDeaths(computeTotals(state))
     renderTopBar(state, onStateChange)
 }
