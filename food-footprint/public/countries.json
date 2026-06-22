@@ -1,0 +1,22 @@
+{
+  "countries": [
+    {
+      "id": "italy",
+      "name": "Italy",
+      "area_km2": 301340,
+      "silhouette": "/silhouettes/italy.svg"
+    },
+    {
+      "id": "france",
+      "name": "France",
+      "area_km2": 632702,
+      "silhouette": "/silhouettes/france.svg"
+    },
+    {
+      "id": "russia",
+      "name": "Russia",
+      "area_km2": 17098246,
+      "silhouette": "/silhouettes/russia.svg"
+    }
+  ]
+}

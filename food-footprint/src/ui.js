@@ -15,7 +15,7 @@ export function computeTotals(state) {
   return state.map(d => ({
     category: d.category,
     ghg:  (d.ghg_per_kg  * (d.grams_per_day / 1000)) * 10, // converte a tonnellata per giorno, scalata su tutta la popolazione mondiale
-    land: d.land_per_kg * (d.grams_per_day / 1000),
+    land: d.land_per_kg * (d.grams_per_day / 1000) * WORLD_POPULATION_2050 / 1000,
     water: d.water_per_kg * (d.grams_per_day / 1000) * WORLD_POPULATION_2050 / 1000,
     grams_per_day: d.grams_per_day
   }))

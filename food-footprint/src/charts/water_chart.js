@@ -116,7 +116,7 @@ export function drawWaterChart(data) {
     segGroup
       .on('mouseover', (event) => {
         segGroup.selectAll('polygon').attr('opacity', 0.75)
-        tooltip.innerHTML = `<strong>${d.category}</strong><br>${d.water.toFixed(0) / 1000 / 1000000}M cubic Tonnes / day`
+        tooltip.innerHTML = `<strong>${d.category}</strong><br>${(d.water / 1e9).toFixed(4)} km³ / day`
         tooltip.classList.remove('hidden')
       })
       .on('mousemove', (event) => {
@@ -156,25 +156,56 @@ export function drawWaterChart(data) {
   g.append('polygon')
     .attr('points', pointsToString([refCorners.A, refCorners.B, refCorners.C, refCorners.D]))
     .attr('fill', '#df2121')
-    .attr('opacity', 0.25)
+    .attr('opacity', 0.50)
     .attr('stroke', '#df2121')
     .attr('stroke-width', 1.5)
 
-  // Reference label
-  const labelPos = isoProject(boxW + 15, refH, boxD / 2)
-  g.append('text')
-    .attr('x', labelPos.x)
-    .attr('y', labelPos.y)
-    .attr('fill', '#df2121')
-    .style('font-size', '10px')
-    .text('EAT-Lancet target')
+    const yScale = d3.scaleLinear()
+    .domain([0, maxVal])
+    .range([0, maxVal * scale])
 
-  // Y axis line
-  const axisTop = isoProject(0, maxVal * scale * 1.1, 0)
-  const axisBot = isoProject(0, 0, 0)
-  g.append('line')
+    // Y axis — positioned to the left of the box
+    const ticks = yScale.ticks(5)
+
+    ticks.forEach(tickVal => {
+    const isoY = tickVal * scale
+    const tickPos = isoProject(0, isoY, 0)
+    const tickEnd = isoProject(-10, isoY, 0)
+
+    // Tick line
+    g.append('line')
+        .attr('x1', tickPos.x).attr('y1', tickPos.y)
+        .attr('x2', tickEnd.x).attr('y2', tickEnd.y)
+        .attr('stroke', '#4b5563')
+        .attr('stroke-width', 1)
+
+    // Tick label
+    g.append('text')
+        .attr('x', tickEnd.x - 4)
+        .attr('y', tickEnd.y + 57)
+        .attr('text-anchor', 'end')
+        .attr('dominant-baseline', 'central')
+        .attr('fill', '#cccccc')
+        .style('font-size', '12px')
+        .text(d => tickVal != 0 ? `${(tickVal / 1e9).toFixed(0)}` : ' ')
+    })
+
+    // Axis line from bottom to top
+    const axisBot = isoProject(0, -77, 0)
+    const axisTop = isoProject(0, maxVal * scale * 1.05, 0)
+    g.append('line')
     .attr('x1', axisBot.x).attr('y1', axisBot.y)
     .attr('x2', axisTop.x).attr('y2', axisTop.y)
     .attr('stroke', '#4b5563')
-    .attr('stroke-width', 1)
+    .attr('stroke-width', 1.5)
+
+    // Y axis label
+    const labelPos = isoProject(0, (maxVal * scale) + 10, 0)
+    g.append('text')
+    .attr('x', labelPos.x - 40)
+    .attr('y', labelPos.y)
+    .attr('text-anchor', 'middle')
+    .attr('fill', '#9ca3af')
+    .style('font-size', '11px')
+    .text('km³ of freshwater / day')
 }
