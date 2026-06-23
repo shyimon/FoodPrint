@@ -1,10 +1,9 @@
 import './style.css'
+import { initState, computeTotals, renderTopBar, renderPresetSelector } from './ui.js'
 import { drawBarChart } from './charts/bar_chart.js'
 import { drawAnimalDeaths, startAnimation } from './charts/animal_deaths.js'
-import { initState, computeTotals, renderTopBar, renderPresetSelector } from './ui.js'
 import { drawWaterChart } from './charts/water_chart.js'
 import { drawLandChart } from './charts/land_chart.js'
-import { EAT_LANCET_WATER_GOAL } from './constants.js'
 
 const response_avg = await fetch('/categories_avg.json')
 const response_worst = await fetch('/categories_worst.json')
@@ -24,6 +23,7 @@ const state = initState(data_avg, startingPreset)
 const dietModeToggle = document.getElementById('data-mode-toggle')
 const modeLabel = document.getElementById('data-mode-label')
 
+// on hover, overlay con tutte le informazioni per i vari pannelli
 const helpBtn = document.getElementById('help-btn')
 const helpOverlay = document.getElementById('help-overlay')
 let helpToggle = false
@@ -39,6 +39,7 @@ helpBtn.addEventListener('click', () => {
   }
 })
 
+// on click, cambio del dataset da media dei cibi della categoria a worst case scenario
 dietModeToggle.addEventListener('change', () => {
     const isWorst = dietModeToggle.checked
     modeLabel.textContent = isWorst ? 'Worst Case' : 'Average'
@@ -71,8 +72,9 @@ function onStateChange() {
   const totals = computeTotals(state)
 
   drawBarChart(totals)
-  drawWaterChart(totals)
   drawAnimalDeaths(totals)
-  drawLandChart(totals, countries)
+  startAnimation()
   renderTopBar(state, onStateChange)
+  drawWaterChart(totals)
+  drawLandChart(totals, countries)
 }

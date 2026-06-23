@@ -1,9 +1,11 @@
 import { ANIMAL_DEATHS_PER_KG, WORLD_POPULATION_2050, SECONDS_PER_DAY } from '../constants.js'
 
+// proporzioni emoji = quante morti; dovrebbero essere uguali per rendere più chiara la visualizzazione
 const pigProportion = 10
 const cowProportion = 10
 const chickenProportion = 10
 
+// quanti animali per riga
 const cowRowSize = 1
 const pigRowSize = 5
 const chickenRowSize = 10
@@ -14,7 +16,7 @@ const LANES = [
   { id: 'chicken', emoji: '🐔'.repeat(chickenRowSize), label: `1 icon = ${chickenProportion} dead Chickens`, proportion: chickenProportion },  
 ]
 
-export function computeDeathRates(totals) {
+export function computeDeathRates(totals) { // scalato per la popolazione mondiale, in tempo reale
   const beef_lamb  = totals.find(d => d.category === 'Beef & Lamb')?.grams_per_day ?? 0
   const pork       = totals.find(d => d.category === 'Pork')?.grams_per_day ?? 0
   const poultry    = totals.find(d => d.category === 'Poultry')?.grams_per_day ?? 0
@@ -50,19 +52,6 @@ export function drawAnimalDeaths(totals) {
         <span class="text-xs text-gray-400 py-2 z-10">${lane.label}</span>
         <div class="lane-icons relative flex-1 w-full" id="lane-${lane.id}"></div>
       `
-
-      // Hover overlay per lane
-      const overlay = document.createElement('div')
-      overlay.className = 'absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-20 z-30 pointer-events-none rounded'
-      overlay.innerHTML = `
-        <span class="text-white text-2xs text-center px-2">
-          1 emoji = <strong>${lane.proportion}</strong> dead ${lane.label.toLowerCase()}<br>
-          <span class="text-gray-300">figures are in real time</span>
-        </span>
-      `
-      col.appendChild(overlay)
-      col.style.pointerEvents = 'auto'
-
       container.querySelector('.animal-lanes').appendChild(col)
     })
   }
@@ -70,8 +59,8 @@ export function drawAnimalDeaths(totals) {
   // Update lane rates
   LANES.forEach(lane => {
     laneStates[lane.id] = {
-      rate:        rates[lane.id] / lane.proportion, // emojis per second
-      realRate:    rates[lane.id],                   // actual animals per second
+      rate:        rates[lane.id] / lane.proportion, // emoji per secondo
+      realRate:    rates[lane.id],                   // animali per secondo
       accumulator: laneStates[lane.id]?.accumulator ?? 0,
       lastTime:    laneStates[lane.id]?.lastTime ?? performance.now(),
     }
@@ -88,7 +77,7 @@ export function startAnimation() {
 
       const elapsed = (now - ls.lastTime) / 1000
       ls.lastTime = now
-      ls.accumulator += ls.rate * elapsed // no cap — proportion handles performance
+      ls.accumulator += ls.rate * elapsed
 
       const laneEl = document.getElementById(`lane-${lane.id}`)
       if (!laneEl) return
@@ -108,10 +97,10 @@ export function startAnimation() {
 function spawnEmoji(laneEl, emoji) {
   const el = document.createElement('div')
   el.className = 'animal-icon absolute'
-  if(emoji == "🐔".repeat(chickenRowSize)) {
+  if(emoji == "🐔".repeat(chickenRowSize)) { // dimensione emoji dipende da quante emoji ci sono per riga
     el.style.fontSize = '8px'
   } else if (emoji == '🐮'.repeat(cowRowSize)) {  
-    el.style.fontSize = '50px'
+    el.style.fontSize = '60px'
   }
   else {
     el.style.fontSize = '15px'
@@ -124,7 +113,7 @@ function spawnEmoji(laneEl, emoji) {
 
   const laneHeight = laneEl.clientHeight
   const startTime = performance.now()
-  const duration = 2000
+  const duration = 1750 // vaelocità scorrimento emoji
 
   function move(now) {
     const progress = (now - startTime) / duration

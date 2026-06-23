@@ -16,10 +16,9 @@ export async function drawLandChart(data, countries) {
   const container = document.getElementById('panel-land')
   container.innerHTML = ''
 
-  // Total land use in km² (global)
   const totalLand = data.reduce((sum, d) => sum + d.land, 0)
 
-  // Default to first country if none selected
+  // seleziona primo paese del dropdown ad apertura pagina
   if (!selectedCountry) selectedCountry = countries[0]
 
   const times = totalLand / selectedCountry.area_km2
@@ -30,7 +29,7 @@ export async function drawLandChart(data, countries) {
   const EAT_LANCET_fullCount = Math.floor(EAT_LANCET_times)
   const EAT_LANCET_partial = EAT_LANCET_times > times ? 1 - partial : 0
 
-  // --- HEADER ---
+  // parte testuale
   const header = document.createElement('div')
   header.className = 'flex items-center gap-3 mb-3 flex-shrink-0'
   header.innerHTML = `
@@ -46,26 +45,26 @@ export async function drawLandChart(data, countries) {
   `
   container.appendChild(header)
 
-  // Country selector interaction
+  // menu dropdown
   header.querySelector('#country-selector').addEventListener('change', (e) => {
     selectedCountry = countries.find(c => c.id === e.target.value)
     drawLandChart(data, countries)
   })
 
-  // --- SILHOUETTE GRID ---
+  // flexgrid per le icone dei paesi
   const grid = document.createElement('div')
   grid.className = 'flex flex-wrap flex-1'
   container.appendChild(grid)
 
-  // Preload SVG
   const svgContent = await fetchSVG(selectedCountry.silhouette)
 
-  // Fixed display size based on country area — scale relative to a reference
-  const REFERENCE_AREA = 301340 // Italy as baseline
+  // scaling dei paesi, le dimensioni sullo schermo sono relative alle dimensioni reali
+  const REFERENCE_AREA = 301340 // italia come base
   const BASE_SIZE = 30
   const size = BASE_SIZE * Math.sqrt(selectedCountry.area_km2 / REFERENCE_AREA)
 
-  function makeSilhouette(fillColor, opacity, maskPercent = null, showRedLine = false, redLineX = null) {
+  // disegna la silhouette, parametrizzato per poter disegnare sia quelle verdi che quelle rosse
+  function makeSilhouette(fillColor, opacity, maskPercent = null) {
   const vb = new DOMParser().parseFromString(svgContent, 'image/svg+xml')
     .documentElement.getAttribute('viewBox')?.split(' ')
   const vbW = vb ? parseFloat(vb[2]) : size
@@ -101,6 +100,7 @@ export async function drawLandChart(data, countries) {
 
   const maxCount = Math.ceil(Math.max(times,EAT_LANCET_times))
 
+  // disegna prima i paesi verdi, quando sfora il limite dell'eat-lancet inizia a disegnare quelli rossi
   for (let i = 0; i < maxCount; i++) {
     const isWithinGoal = i < EAT_LANCET_fullCount || (i === EAT_LANCET_fullCount && partial <= EAT_LANCET_partial)
     const isActual = i < fullCount
@@ -111,7 +111,7 @@ export async function drawLandChart(data, countries) {
     let maskPercent = null
 
     if (isPartial) maskPercent = partial
-    if (!isActual && !isPartial) continue // don't render beyond actual diet
+    if (!isActual && !isPartial) continue
 
     const el = makeSilhouette(fillColor, '1', maskPercent, isEatLine, EAT_LANCET_partial)
     grid.appendChild(el)

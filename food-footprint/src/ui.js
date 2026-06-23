@@ -15,19 +15,19 @@ export function computeTotals(state) {
   return state.map(d => ({
     category: d.category,
     ghg:  (d.ghg_per_kg  * (d.grams_per_day / 1000)) * 10, // converte a tonnellata per giorno, scalata su tutta la popolazione mondiale
-    land: d.land_per_kg * (d.grams_per_day / 1000) * WORLD_POPULATION_2050 / 1000,
-    water: d.water_per_kg * (d.grams_per_day / 1000) * WORLD_POPULATION_2050 / 1000,
-    grams_per_day: d.grams_per_day
+    land: d.land_per_kg * (d.grams_per_day / 1000) * WORLD_POPULATION_2050 / 1000, // converte a km^2 scalata sulla popolazione mondiale
+    water: d.water_per_kg * (d.grams_per_day / 1000) * WORLD_POPULATION_2050 / 1000, // converte a km2 per giorno, sulla popolazione mondiale
+    grams_per_day: d.grams_per_day // i grammi attuali della categoria alimentare
   }))
 }
 
 export function renderTopBar(state, onStateChange) {
   const header = document.getElementById('top-bar')
   
-  // Remove existing cards
+  // pulisce per non accumulare la grafica a ogni frame
   header.querySelectorAll('.food-card').forEach(el => el.remove())
 
-  // One card per active category
+  // filtra le categorie non mangiate
   const totalGrams = state
     .filter(d => d.grams_per_day > 0)
     .reduce((sum, d) => sum + d.grams_per_day, 0)
@@ -38,9 +38,9 @@ export function renderTopBar(state, onStateChange) {
       const card = document.createElement('div')
 
         const proportion = d.grams_per_day / totalGrams
-        const labelVisible = proportion >= 0.1 // show label only if element is big enough, avoids cluttering
+        const labelVisible = proportion >= 0.1 // label solo se la categoria occupa più del 10% dello schermo, altrimenti informazioni mostrate solo on hover
 
-        const widthPercent = Math.max(proportion * 100, 1)
+        const widthPercent = Math.max(proportion * 100, 1) // pone un minimo alla dimensione delle card delle categorie alimentari
         card.style.width = `${widthPercent}%`
 
       card.className = 'food-card flex flex-col px-4 py-2 border border-gray-600 rounded-lg h-16 justify-center cursor-pointer overflow-hidden hover:border-white transition'
@@ -49,7 +49,7 @@ export function renderTopBar(state, onStateChange) {
         <span class="text-xs text-gray-400">${d.grams_per_day}g / day</span>
       ` : ''
 
-      if (!labelVisible) {
+      if (!labelVisible) { // logica della card on hover per le categorie troppo piccole
         const tooltip = document.getElementById('tooltip-ghg')
         card.addEventListener('mouseover', (event) => {
           tooltip.innerHTML = `<strong>${d.category}</strong><br>${d.grams_per_day}g / day`
@@ -73,11 +73,10 @@ export function renderTopBar(state, onStateChange) {
 }
 
 function openEditModal(item, state, onStateChange) {
-  // Create overlay
   const overlay = document.createElement('div')
   overlay.className = 'fixed inset-0 bg-black/60 flex items-center justify-center z-50'
 
-  // Create modal box
+  // ui per modifica elemento attuale
   overlay.innerHTML = `
     <div class="bg-gray-900 border border-gray-700 rounded-xl p-6 flex flex-col gap-4 w-72" id="modal-box">
       <h2 class="text-lg font-semibold">${item.category}</h2>
@@ -98,12 +97,12 @@ function openEditModal(item, state, onStateChange) {
     </div>
   `
 
-  // Close on overlay click (but not modal box click)
+  // chiudi ui cliccando altrove
   overlay.addEventListener('click', (e) => {
     if (e.target === overlay) document.body.removeChild(overlay)
   })
 
-  // Save button
+  // salva modifiche, salva in grams_per_day
   overlay.querySelector('#modal-save').addEventListener('click', () => {
     const newGrams = parseInt(overlay.querySelector('#modal-input').value)
     item.grams_per_day = isNaN(newGrams) ? 0 : newGrams
@@ -111,7 +110,7 @@ function openEditModal(item, state, onStateChange) {
     onStateChange()
   })
 
-  // Remove button
+  // rimuovi categoria di cibo dalla dieta
   overlay.querySelector('#modal-remove').addEventListener('click', () => {
     item.grams_per_day = 0
     document.body.removeChild(overlay)
@@ -122,7 +121,8 @@ function openEditModal(item, state, onStateChange) {
 }
 
 function openAddModal(state, onStateChange) {
-  const inactive = state.filter(d => d.grams_per_day === 0)
+  // ui per aggiunta nuova categoria di cibo alla dieta
+  const inactive = state.filter(d => d.grams_per_day === 0) // possibile aggiungre solo elementi che non ci sono già
 
   const overlay = document.createElement('div')
   overlay.className = 'fixed inset-0 bg-black/60 flex items-center justify-center z-50'
@@ -159,12 +159,12 @@ function openAddModal(state, onStateChange) {
 export function renderPresetSelector(presets, state, onStateChange) {
   const selector = document.getElementById('preset-selector')
   
-  // Populate options
+  // aggiungta dei preset alle opzioni del dropdown
   selector.innerHTML = presets.map(p => 
     `<option value="${p.id}">${p.label}</option>`
   ).join('')
 
-  // On change, update state grams from the selected preset
+  // update della ui e dei panel quando cambia il preset
   selector.addEventListener('change', () => {
     const selected = presets.find(p => p.id === selector.value)
     state.forEach(d => {

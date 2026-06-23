@@ -45,7 +45,6 @@ export function drawWaterChart(data) {
 
   const tooltip = document.getElementById('tooltip-ghg')
 
-  // Scale: map total water to box height units
   const totalWater = d3.sum(data, d => d.water)
   const maxVal = Math.max(totalWater, EAT_LANCET_WATER_GOAL)
   const scale = (height * 0.6) / maxVal
@@ -53,7 +52,7 @@ export function drawWaterChart(data) {
   const boxW = 100  // x width of box
   const boxD = 100  // z depth of box
 
-  // Center the chart
+  // centra il grafico
   const origin = { x: width / 2, y: height * 0.7 }
 
   const g = svg.append('g')
@@ -88,31 +87,23 @@ export function drawWaterChart(data) {
 
     const segGroup = g.append('g').style('cursor', 'pointer')
 
-    // Left face (darker)
-    segGroup.append('polygon')
-      .attr('points', pointsToString([corners.D, corners.H, corners.E, corners.A]))
-      .attr('fill', shadedColor(color, 0.6))
-      .attr('stroke', 'none')
-
-    // Right face (medium)
+    // renderizzazione diversi lati del poligono
     segGroup.append('polygon')
       .attr('points', pointsToString([corners.C, corners.G, corners.F, corners.B]))
       .attr('fill', shadedColor(color, 1.1))
       .attr('stroke', 'none')
 
-    // Top face (lightest)
     segGroup.append('polygon')
       .attr('points', pointsToString([corners.E, corners.F, corners.G, corners.H]))
       .attr('fill', shadedColor(color, 1.1))
       .attr('stroke', 'none')
 
-    // Top face (lightest)
     segGroup.append('polygon')
       .attr('points', pointsToString([corners.D, corners.H, corners.G, corners.C]))
       .attr('fill', shadedColor(color, 0.8))
       .attr('stroke', 'none')
 
-    // Hover interaction
+    // mostra informazioni on hover
     segGroup
       .on('mouseover', (event) => {
         segGroup.selectAll('polygon').attr('opacity', 0.75)
@@ -161,10 +152,9 @@ export function drawWaterChart(data) {
     .attr('stroke-width', 1.5)
 
     const yScale = d3.scaleLinear()
-    .domain([0, maxVal])
+    .domain([0, maxVal * 0.9])
     .range([0, maxVal * scale])
 
-    // Y axis — positioned to the left of the box
     const ticks = yScale.ticks(5)
 
     ticks.forEach(tickVal => {
@@ -172,7 +162,7 @@ export function drawWaterChart(data) {
     const tickPos = isoProject(0, isoY, 0)
     const tickEnd = isoProject(-10, isoY, 0)
 
-    // Tick line
+    // ticks
     g.append('line')
         .attr('x1', tickPos.x).attr('y1', tickPos.y)
         .attr('x2', tickEnd.x).attr('y2', tickEnd.y)
@@ -190,9 +180,9 @@ export function drawWaterChart(data) {
         .text(d => tickVal != 0 ? `${(tickVal / 1e9).toFixed(0)}` : ' ')
     })
 
-    // Axis line from bottom to top
+    // linea verticale
     const axisBot = isoProject(0, -77, 0)
-    const axisTop = isoProject(0, maxVal * scale * 1.05, 0)
+    const axisTop = isoProject(0, maxVal * scale * 0.91, 0)
     g.append('line')
     .attr('x1', axisBot.x).attr('y1', axisBot.y)
     .attr('x2', axisTop.x).attr('y2', axisTop.y)
