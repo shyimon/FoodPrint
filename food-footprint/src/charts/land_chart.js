@@ -26,6 +26,10 @@ export async function drawLandChart(data, countries) {
   const fullCount = Math.floor(times)
   const partial = times - fullCount
 
+  const EAT_LANCET_times = EAT_LANCET_LAND_GOAL / selectedCountry.area_km2
+  const EAT_LANCET_fullCount = Math.floor(EAT_LANCET_times)
+  const EAT_LANCET_partial = EAT_LANCET_times > times ? 1 - partial : 0
+
   // --- HEADER ---
   const header = document.createElement('div')
   header.className = 'flex items-center gap-3 mb-3 flex-shrink-0'
@@ -61,36 +65,55 @@ export async function drawLandChart(data, countries) {
   const BASE_SIZE = 30
   const size = BASE_SIZE * Math.sqrt(selectedCountry.area_km2 / REFERENCE_AREA)
 
-  // Full silhouettes
-  for (let i = 0; i < fullCount; i++) {
-    const el = document.createElement('div')
-    el.style.width = `${size}px`
-    el.style.height = `${size}px`
-    el.innerHTML = svgContent
-    const svg = el.querySelector('svg')
-    if (svg) {
-      svg.setAttribute('width', size)
-      svg.setAttribute('height', size)
-      svg.style.fill = '#4ade80'
-    }
-    grid.appendChild(el)
+  function makeSilhouette(fillColor, opacity, maskPercent = null, showRedLine = false, redLineX = null) {
+  const vb = new DOMParser().parseFromString(svgContent, 'image/svg+xml')
+    .documentElement.getAttribute('viewBox')?.split(' ')
+  const vbW = vb ? parseFloat(vb[2]) : size
+  const vbH = vb ? parseFloat(vb[3]) : size
+  const aspect = vbW / vbH
+
+  const wrapper = document.createElement('div')
+  wrapper.style.position = 'relative'
+  wrapper.style.width = `${size * aspect}px`
+  wrapper.style.height = `${size}px`
+  wrapper.style.flexShrink = '0'
+
+  if (maskPercent !== null) {
+    wrapper.style.webkitMaskImage = `linear-gradient(to right, black ${maskPercent * 100}%, transparent ${maskPercent * 100}%)`
+    wrapper.style.maskImage = `linear-gradient(to right, black ${maskPercent * 100}%, transparent ${maskPercent * 100}%)`
   }
 
-  // Partial silhouette — clipped with CSS mask
-  if (partial > 0) {
-    const el = document.createElement('div')
-    el.style.width = `${size}px`
-    el.style.height = `${size}px`
-    el.style.flexShrink = '0'
-    el.style.webkitMaskImage = `linear-gradient(to right, black ${partial * 100}%, transparent ${partial * 100}%)`
-    el.style.maskImage = `linear-gradient(to right, black ${partial * 100}%, transparent ${partial * 100}%)`
-    el.innerHTML = svgContent
-    const svg = el.querySelector('svg')
-    if (svg) {
-      svg.setAttribute('width', size)
-      svg.setAttribute('height', size)
-      svg.style.fill = '#4ade80'
-    }
+  wrapper.innerHTML = svgContent
+  const svg = wrapper.querySelector('svg')
+  if (svg) {
+    svg.setAttribute('width', size * aspect)
+    svg.setAttribute('height', size)
+    svg.style.fill = fillColor
+    svg.style.display = 'block'
+    svg.querySelectorAll('path, polygon, rect, circle').forEach(el => {
+      el.setAttribute('fill', fillColor)
+      el.style.opacity = opacity
+    })
+  }
+
+  return wrapper
+}
+
+  const maxCount = Math.ceil(Math.max(times,EAT_LANCET_times))
+
+  for (let i = 0; i < maxCount; i++) {
+    const isWithinGoal = i < EAT_LANCET_fullCount || (i === EAT_LANCET_fullCount && partial <= EAT_LANCET_partial)
+    const isActual = i < fullCount
+    const isPartial = i === fullCount && partial > 0
+    const isEatLine = i === EAT_LANCET_fullCount
+
+    let fillColor = isWithinGoal ? '#4ade80' : '#ef4444'
+    let maskPercent = null
+
+    if (isPartial) maskPercent = partial
+    if (!isActual && !isPartial) continue // don't render beyond actual diet
+
+    const el = makeSilhouette(fillColor, '1', maskPercent, isEatLine, EAT_LANCET_partial)
     grid.appendChild(el)
   }
 }

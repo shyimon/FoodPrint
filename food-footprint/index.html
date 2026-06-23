@@ -43,10 +43,55 @@
       <div id="panel-deaths" class="p-4 overflow-hidden">
       </div>
 
-    </main>
+    <button 
+      id="help-btn"
+      class="fixed bottom-3 left-3 z-50 w-10 h-10 rounded-full bg-gray-800 border border-gray-600 text-gray-400 hover:text-white hover:border-white transition flex items-center justify-center text-xl"
+    >?</button>
 
-    <div id="tooltip-ghg" class="absolute hidden bg-gray-800 text-white text-sm rounded-lg p-3 max-w-xs pointer-events-none shadow-lg border border-gray-600">
+  <div 
+    id="help-overlay"
+    class="fixed inset-0 z-40 pointer-events-none opacity-0 transition-opacity duration-300"
+    style="backdrop-filter: blur(2px); background: rgba(0,0,0,0.75)"
+  >
+    <!-- Header explanation -->
+    <div class="absolute left-0 right-0 flex items-center justify-center p-4 border-b border-gray-800" style="top: 0; height: 121px">
+      <div class="text-center">
+        <h3 class="text-white font-semibold mb-1">Diet Builder</h3>
+        <p class="text-gray-300 text-sm">Select a diet from the dropdown menu or build your own. The diet will then be projected to be the average diet for a planet with a population of 10 billion humans, as per the <a href="https://eatforum.org/wp-content/uploads/2026/04/EL_Summary-Report_2025_v1.pdf" target="_blank" class="inline-flex font-medium items-center text-green-600 underline hover:no-underline">Eat-Lancet study</a>.<br>Toggle between average and worst-case environmental impact estimates.</p>
+      </div>
     </div>
 
+    <!-- Panel explanations -->
+    <div class="absolute left-0 right-0 bottom-0 flex divide-x divide-gray-800" style="top: 121px">
+      <div class="flex-1 flex items-center justify-center p-8">
+        <div class="text-center">
+          <h3 class="text-white font-semibold mb-2">Land Use</h3>
+          <p class="text-gray-300 text-sm">Total land required to produce your diet, scaled to 10 billion people. Select a country for scale.<br>Green silhouettes are within the EAT-Lancet target, red ones exceed it. Land use is measured in meters squared (m²) for one year to produce one kilogram of a given food product.<br>Data is taken from Poore and Nemecek, and processed by <a href="https://ourworldindata.org/environmental-impacts-of-food" target="_blank" class="inline-flex font-medium items-center text-green-600 underline hover:no-underline">Our World in Data</a>.</p>
+        </div>
+      </div>
+      <div class="flex-1 flex items-center justify-center p-8">
+        <div class="text-center">
+          <h3 class="text-white font-semibold mb-2">GHG Emissions</h3>
+          <p class="text-gray-300 text-sm">Greenhouse gas emissions are measured in millions of tonnes of carbon dioxide-equivalents emitted per day (this means non-CO₂ gases are weighted by theamount of warming they cause over a 100-year timescale), projected on 10 billion humans. The red line shows the emissions goal proposed by the EAT-Lancet Commission for 2050 in the Planetary Health Diet Report.<br>Data is taken from Poore and Nemecek, and processed by <a href="https://ourworldindata.org/environmental-impacts-of-food" target="_blank" class="inline-flex font-medium items-center text-green-600 underline hover:no-underline">Our World in Data</a>.</p>
+        </div>
+      </div>
+      <div class="flex-1 flex items-center justify-center p-8">
+        <div class="text-center">
+          <h3 class="text-white font-semibold mb-2">Water Use</h3>
+          <p class="text-gray-300 text-sm">Freshwater withdrawals used to produce your diet in km³ per day at global scale. The red plane marks the EAT-Lancet sustainable water use boundary for 2050.<br>Data is taken from Poore and Nemecek, and processed by <a href="https://ourworldindata.org/environmental-impacts-of-food" target="_blank" class="inline-flex font-medium items-center text-green-600 underline hover:no-underline">Our World in Data</a>.</p>
+        </div>
+      </div>
+      <div class="flex-1 flex items-center justify-center p-8">
+        <div class="text-center">
+          <h3 class="text-white font-semibold mb-2">Animal Deaths</h3>
+          <p class="text-gray-300 text-sm">Animals killed in real time to sustain your diet scaled to 10 billion people.<br>Data taken from <a href="https://faunalytics.org/animal-product-impact-scales/" target="_blank" class="inline-flex font-medium items-center text-green-600 underline hover:no-underline">Funalytics</a>.<br>Please note that the number of fish and sealife deaths are difficult to estimate, but even so, they would average around a trillion per year for the average fish consumption, and thus be extremely difficult to display.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="tooltip-ghg" class="fixed hidden bg-gray-800 text-white text-sm rounded-lg p-3 max-w-xs pointer-events-none shadow-lg border border-gray-600 z-50"></div>
+    
+    </main>
   </body>
 </html>

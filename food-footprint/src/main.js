@@ -5,28 +5,42 @@ import { initState, computeTotals, renderTopBar, renderPresetSelector } from './
 import { drawWaterChart } from './charts/water_chart.js'
 import { drawLandChart } from './charts/land_chart.js'
 import { EAT_LANCET_WATER_GOAL } from './constants.js'
-import { compute } from 'three/tsl'
 
 const response_avg = await fetch('/categories_avg.json')
 const response_worst = await fetch('/categories_worst.json')
-const presets = await fetch('/presets.json')
+const response_countries = await fetch('/countries.json')
+const response_presets = await fetch('/presets.json')
 
 const data_avg = await response_avg.json()
 const data_worst = await response_worst.json()
-const data_presets = await presets.json()
+const data_countries = await response_countries.json()
+const data_presets = await response_presets.json()
 
-const countriesRes = await fetch('/countries.json')
-const countriesData = await countriesRes.json()
-const countries = countriesData.countries
+const countries = data_countries.countries
 
 const startingPreset = data_presets.presets.find(p => p.id === 'mediterranean')
 const state = initState(data_avg, startingPreset)
 
-const toggle = document.getElementById('data-mode-toggle')
+const dietModeToggle = document.getElementById('data-mode-toggle')
 const modeLabel = document.getElementById('data-mode-label')
 
-toggle.addEventListener('change', () => {
-    const isWorst = toggle.checked
+const helpBtn = document.getElementById('help-btn')
+const helpOverlay = document.getElementById('help-overlay')
+let helpToggle = false
+
+helpBtn.addEventListener('click', () => {
+  helpToggle = !helpToggle
+  if (helpToggle) {
+    helpOverlay.classList.remove('opacity-0', 'pointer-events-none')
+    helpOverlay.classList.add('opacity-100', 'pointer-events-auto')
+  } else {
+    helpOverlay.classList.remove('opacity-100', 'pointer-events-auto')
+    helpOverlay.classList.add('opacity-0', 'pointer-events-none')
+  }
+})
+
+dietModeToggle.addEventListener('change', () => {
+    const isWorst = dietModeToggle.checked
     modeLabel.textContent = isWorst ? 'Worst Case' : 'Average'
 
     const newData = isWorst ? data_worst : data_avg

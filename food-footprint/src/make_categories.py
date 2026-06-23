@@ -10,7 +10,7 @@ df = land[["Entity", "land_per_kg"]] \
     .merge(ghg[["Entity", "ghg_per_kg"]], on="Entity", how="outer")
 
 categories = {
-    "Red Meat": ["Beef (beef herd)", "Beef (dairy herd)", "Lamb & Mutton"],
+    "Beef & Lamb": ["Beef (beef herd)", "Beef (dairy herd)", "Lamb & Mutton"],
     "Pork": ["Pig Meat"],
     "Poultry": ["Poultry Meat"],
     "Eggs": ["Eggs"],

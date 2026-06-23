@@ -115,34 +115,4 @@ export function drawBarChart(data) {
     .attr('stroke', '#df2121')
     .attr('stroke-width', 3)
     .attr('stroke-dasharray', '6,3')
-
-const tooltipTrigger = svg.append('g')
-  .attr('transform', `translate(${margin.left - 40}, ${margin.top + 171})`)
-  .style('cursor', 'pointer')
-
-tooltipTrigger.append('circle')
-  .attr('r', 8)
-  .attr('fill', '#374151')
-  .attr('stroke', '#6b7280')
-
-tooltipTrigger.append('text')
-  .attr('text-anchor', 'middle')
-  .attr('dominant-baseline', 'central')
-  .attr('fill', '#9ca3af')
-  .style('font-size', '11px')
-  .text('?')
-
-tooltipTrigger
-  .on('mouseover', () => {
-    tooltip.textContent = 'Greenhouse gas emissions are measured in millions of tonnes of carbon dioxide-equivalents emitted per day (this means non-CO₂ gases are weighted by theamount of warming they cause over a 100-year timescale), projected on 10 billion humans.'
-    tooltip.textContent += ' The red line shows the emissions goal proposed by the EAT-Lancet Commission for 2050 in the Planetary Health Diet Report.'
-    tooltip.classList.remove('hidden')
-  })
-  .on('mousemove', (event) => {
-    tooltip.style.left = (event.pageX + 12) + 'px'
-    tooltip.style.top = (event.pageY - 28) + 'px'
-  })
-  .on('mouseout', () => {
-    tooltip.classList.add('hidden')
-  })
 }
