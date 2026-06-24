@@ -23,12 +23,12 @@ export function computeDeathRates(totals) { // scalato per la popolazione mondia
   const eggs       = totals.find(d => d.category === 'Eggs')?.grams_per_day ?? 0
   const dairy      = totals.find(d => d.category === 'Dairy')?.grams_per_day ?? 0
 
-  const cowDeaths      = (ANIMAL_DEATHS_PER_KG.beef    * beef_lamb / 1000 * WORLD_POPULATION_2050) / SECONDS_PER_DAY
+  const cowDeaths      = ((ANIMAL_DEATHS_PER_KG.beef    * beef_lamb / 1000) +
+                          (ANIMAL_DEATHS_PER_KG.dairy * dairy / 1000) * WORLD_POPULATION_2050) / SECONDS_PER_DAY
   const pigDeaths      = (ANIMAL_DEATHS_PER_KG.pork    * pork      / 1000 * WORLD_POPULATION_2050) / SECONDS_PER_DAY
   const chickenDeaths  = (
     (ANIMAL_DEATHS_PER_KG.chicken    * poultry / 1000) +
-    (ANIMAL_DEATHS_PER_KG.eggs_dairy * eggs    / 1000) +
-    (ANIMAL_DEATHS_PER_KG.eggs_dairy * dairy   / 1000)
+    (ANIMAL_DEATHS_PER_KG.eggs * eggs    / 1000)
   ) * WORLD_POPULATION_2050 / SECONDS_PER_DAY
 
   return { cow: cowDeaths / cowRowSize, pig: pigDeaths / pigRowSize, chicken: chickenDeaths / chickenRowSize }

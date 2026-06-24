@@ -11,6 +11,7 @@ export const ANIMAL_DEATHS_PER_KG = {
   beef:       0.0029913,
   pork:       0.4189047,
   chicken:    0.6646975,
-  eggs_dairy: 0.0817,   // media fra uova e latticini
+  eggs:       0.1631163,
+  dairy:      0.00041088,   
   fish:       33.0123007
 }
