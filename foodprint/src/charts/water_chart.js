@@ -1,6 +1,7 @@
 import * as d3 from 'd3'
 import { categoryColors } from '../colors.js'
 import { EAT_LANCET_WATER_GOAL, WORLD_POPULATION_2050 } from '../constants.js'
+import { EnvironmentNode } from 'three/webgpu'
 
 // Isometric projection helpers
 const ISO_ANGLE = Math.PI / 8
@@ -49,16 +50,14 @@ export function drawWaterChart(data) {
   const maxVal = Math.max(totalWater, EAT_LANCET_WATER_GOAL * WORLD_POPULATION_2050 / 10)
   const scale = (height * 0.65) / maxVal
 
-  const boxW = 50  // x width of box
-  const boxD = 50  // z depth of box
+  const boxW = 65  // x width of box
+  const boxD = 65  // z depth of box
 
   // centra il grafico
   let origin = { x: width - width / 3, y: height * 0.75 }
 
   let g = svg.append('g')
     .attr('transform', `translate(${origin.x}, ${origin.y})`)
-
-  data.sort((a, b) => b.water - a.water)
 
   let currentHeight = 0
 
@@ -118,9 +117,23 @@ export function drawWaterChart(data) {
         segGroup.selectAll('polygon').attr('opacity', 1)
         tooltip.classList.add('hidden')
       })
+      .on('click', (e) => {
+        let index = data.indexOf(d)
+          if(index != 0) {
+          data.splice(index, 1)
+          data.unshift(d)
+          drawWaterChart(data, 'panel-water')
+        }
+        else {
+          data.sort((a, b) => b.water - a.water)
+          drawWaterChart(data, 'panel-water')
+        }
+      })
 
     currentHeight = y1
   })
+
+  
 
     const yScale = d3.scaleLinear()
     .domain([0, maxVal * 1])
@@ -129,7 +142,7 @@ export function drawWaterChart(data) {
     const ticks = yScale.ticks(5)
 
     ticks.forEach(tickVal => {
-    const isoY = tickVal * scale + 25
+    const isoY = tickVal * scale - (height / 16)
     const tickPos = isoProject(0, isoY, 0)
     const tickEnd = isoProject(-10, isoY, 0)
 
@@ -143,7 +156,7 @@ export function drawWaterChart(data) {
     // Tick label
     g.append('text')
         .attr('x', tickEnd.x - 4)
-        .attr('y', tickEnd.y + 63)
+        .attr('y', tickEnd.y)
         .attr('text-anchor', 'end')
         .attr('dominant-baseline', 'central')
         .attr('fill', '#cccccc')
@@ -152,7 +165,7 @@ export function drawWaterChart(data) {
     })
 
     // linea verticale
-    const axisBot = isoProject(0, -38, 0)
+    const axisBot = isoProject(0, - (height / 16), 0)
     const axisTop = isoProject(0, maxVal * scale * 0.99, 0)
     g.append('line')
     .attr('x1', axisBot.x).attr('y1', axisBot.y)
@@ -225,7 +238,7 @@ export function drawWaterChart(data) {
     segGroup
       .on('mouseover', (event) => {
         segGroup.selectAll('polygon').attr('opacity', 0.75)
-        tooltip.innerHTML = `<strong>EAT-Lancet Goal</strong><br>${goal_water.toFixed(2)} km³ / day`
+        tooltip.innerHTML = `<strong>EAT-Lancet Goal</strong><br>${(goal_water / 1e9).toFixed(2)} km³ / day`
         tooltip.classList.remove('hidden')
       })
       .on('mousemove', (event) => {
