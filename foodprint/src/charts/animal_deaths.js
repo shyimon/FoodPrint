@@ -1,20 +1,28 @@
 import { ANIMAL_DEATHS_PER_KG, WORLD_POPULATION_2050, SECONDS_PER_DAY } from '../constants.js'
 
 // proporzioni emoji = quante morti; dovrebbero essere uguali per rendere più chiara la visualizzazione
-const pigProportion = 10
-const cowProportion = 10
-const chickenProportion = 10
+const proportions = {cow: 10, pig: 10, chicken: 10}
 
 // quanti animali per riga
-const cowRowSize = 1
-const pigRowSize = 5
-const chickenRowSize = 10
+const rowSize = {cow: 1, pig: 5, chicken: 10}
+
+const absolute_deaths = {cow: 0, pig: 0, chicken: 0}
 
 const LANES = [
-  { id: 'cow',     emoji: '🐮'.repeat(cowRowSize), label: `1 icon = ${cowProportion} dead Cows`,     proportion: cowProportion  },   
-  { id: 'pig',     emoji: '🐷'.repeat(pigRowSize), label: `1 icon = ${pigProportion} dead Pigs`,     proportion: pigProportion },  
-  { id: 'chicken', emoji: '🐔'.repeat(chickenRowSize), label: `1 icon = ${chickenProportion} dead Chickens`, proportion: chickenProportion },  
+  { id: 'cow',     emoji: '🐮'.repeat(rowSize.cow), label: `1 icon = ${proportions.cow} dead Cows`,     proportion: proportions.cow, rowSize: rowSize.cow},   
+  { id: 'pig',     emoji: '🐷'.repeat(rowSize.pig), label: `1 icon = ${proportions.pig} dead Pigs`,     proportion: proportions.pig, rowSize: rowSize.pig },  
+  { id: 'chicken', emoji: '🐔'.repeat(rowSize.chicken), label: `1 icon = ${proportions.chicken} dead Chickens`, proportion: proportions.chicken, rowSize: rowSize.chicken },  
 ]
+
+export function resetAnimalDeaths() {
+  absolute_deaths.cow = 0
+  absolute_deaths.pig = 0
+  absolute_deaths.chicken = 0
+  LANES.forEach(lane => {
+    const el = document.getElementById('counter-' + lane.id)
+    if (el) el.textContent = '0'
+  })
+}
 
 export function computeDeathRates(totals) { // scalato per la popolazione mondiale, in tempo reale
   const beef_lamb  = totals.find(d => d.category === 'Beef & Lamb')?.grams_per_day ?? 0
@@ -31,7 +39,7 @@ export function computeDeathRates(totals) { // scalato per la popolazione mondia
     (ANIMAL_DEATHS_PER_KG.eggs * eggs    / 1000)
   ) * WORLD_POPULATION_2050 / SECONDS_PER_DAY
 
-  return { cow: cowDeaths / cowRowSize, pig: pigDeaths / pigRowSize, chicken: chickenDeaths / chickenRowSize }
+  return { cow: cowDeaths / rowSize.cow, pig: pigDeaths / rowSize.pig, chicken: chickenDeaths / rowSize.chicken }
 }
 
 let animationId = null
@@ -41,6 +49,7 @@ export function drawAnimalDeaths(totals) {
   const rates = computeDeathRates(totals)
   const container = document.getElementById('panel-deaths')
 
+
   // First call — build DOM
   if (!container.querySelector('.animal-lanes')) {
     container.innerHTML = `<div class="animal-lanes flex h-full w-full relative"></div>`
@@ -49,8 +58,14 @@ export function drawAnimalDeaths(totals) {
       const col = document.createElement('div')
       col.className = 'flex-1 flex flex-col items-center relative border-r border-gray-800 last:border-r-0'
       col.innerHTML = `
-        <span class="text-xs text-gray-400 py-2 z-10">${lane.label}</span>
+        <div class="flex flex-col items-center py-2 z-10 shrink-0">
+          <span class="text-xs text-gray-400">1 icon = ${lane.proportion} dead ${lane.id}s</span>
+        </div>
         <div class="lane-icons relative flex-1 w-full" id="lane-${lane.id}"></div>
+        <div class="flex flex-col items-center py-2 shrink-0">
+          <span id="counter-${lane.id}" class="text-white font-mono text-sm">0</span>
+          <span class="text-xs text-gray-400">deaths</span>
+        </div>
       `
       container.querySelector('.animal-lanes').appendChild(col)
     })
@@ -84,7 +99,7 @@ export function startAnimation() {
 
       while (ls.accumulator >= 1) {
         ls.accumulator -= 1
-        spawnEmoji(laneEl, lane.emoji)
+        spawnEmoji(laneEl, lane.emoji, lane.id, lane.proportion, lane.rowSize)
       }
     })
 
@@ -94,12 +109,15 @@ export function startAnimation() {
   animationId = requestAnimationFrame(tick)
 }
 
-function spawnEmoji(laneEl, emoji) {
+function spawnEmoji(laneEl, emoji, laneId, proportion, rowSize) {
+  absolute_deaths[laneId] += proportion * rowSize
+  updateCounter(laneId)
+
   const el = document.createElement('div')
   el.className = 'animal-icon absolute'
-  if(emoji == "🐔".repeat(chickenRowSize)) { // dimensione emoji dipende da quante emoji ci sono per riga
+  if(emoji == "🐔".repeat(rowSize)) { // dimensione emoji dipende da quante emoji ci sono per riga
     el.style.fontSize = '8px'
-  } else if (emoji == '🐮'.repeat(cowRowSize)) {  
+  } else if (emoji == '🐮'.repeat(rowSize)) {  
     el.style.fontSize = '60px'
   }
   else {
@@ -108,7 +126,6 @@ function spawnEmoji(laneEl, emoji) {
   el.style.left = `calc(10%)`
   el.style.top = `0px`
   el.textContent = emoji
-
   laneEl.appendChild(el)
 
   const laneHeight = laneEl.clientHeight
@@ -121,9 +138,14 @@ function spawnEmoji(laneEl, emoji) {
       el.remove()
       return
     }
-    el.style.top = `${progress * (laneHeight + 40) - 10}px`
+    el.style.top = `${progress * (laneHeight -50) - 10}px`
     requestAnimationFrame(move)
   }
 
   requestAnimationFrame(move)
+}
+
+function updateCounter(laneId) {
+  const el = document.getElementById('counter-' + laneId)
+  if (el) el.textContent = absolute_deaths[laneId].toLocaleString()
 }

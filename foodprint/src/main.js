@@ -1,7 +1,7 @@
 import './style.css'
 import { initState, computeTotals, renderTopBar, renderPresetSelector } from './ui.js'
 import { drawBarChart } from './charts/bar_chart.js'
-import { drawAnimalDeaths, startAnimation } from './charts/animal_deaths.js'
+import { drawAnimalDeaths, startAnimation, resetAnimalDeaths } from './charts/animal_deaths.js'
 import { drawWaterChart } from './charts/water_chart.js'
 import { drawLandChart } from './charts/land_chart.js'
 
@@ -72,6 +72,7 @@ function onStateChange() {
   const totals = computeTotals(state)
 
   drawBarChart(totals)
+  resetAnimalDeaths()
   drawAnimalDeaths(totals)
   startAnimation()
   renderTopBar(state, onStateChange)
