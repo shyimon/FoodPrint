@@ -16,7 +16,7 @@ export function computeTotals(state) {
     category: d.category,
     ghg:  (d.ghg_per_kg  * (d.grams_per_day / 1000)) * 10, // converte a tonnellata per giorno, scalata su tutta la popolazione mondiale
     land: d.land_per_kg * (d.grams_per_day / 1000) * WORLD_POPULATION_2050 / 1000, // converte a km^2 scalata sulla popolazione mondiale
-    water: d.water_per_kg * (d.grams_per_day / 1000) * WORLD_POPULATION_2050 / 1000, // converte a km2 per giorno, sulla popolazione mondiale
+    water: d.water_per_kg * (d.grams_per_day / 1000) * WORLD_POPULATION_2050 / 1000, // converte a km3 per giorno, sulla popolazione mondiale
     grams_per_day: d.grams_per_day // i grammi attuali della categoria alimentare
   }))
 }
